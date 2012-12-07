@@ -23,7 +23,7 @@ public class GameOfLife {
         this.liveCells = cells;
     }
 
-    public void nextGeneration() {
+    public boolean nextGeneration() {
         List<Cell> survivors = newArrayList();
 
         for(Cell cell : liveCells) {
@@ -45,7 +45,17 @@ public class GameOfLife {
             }
         }
 
+        return createNewGeneration(survivors);
+    }
+
+    private boolean createNewGeneration(List<Cell> survivors) {
+        if(liveCells.equals(survivors)) {
+            return false;
+        }
+
         liveCells = survivors;
+
+        return true;
     }
 
     private boolean hasThreeNeighbours(List<Cell> neighbours) {
@@ -53,22 +63,27 @@ public class GameOfLife {
     }
 
     private Set<Cell> getDeadCells() {
-        Set<Cell> deadCells = newHashSet();
-
-        for(Cell liveCell : liveCells) {
-            for(int x = liveCell.getX() - 1; x <= liveCell.getX() + 1; x++) {
-                for(int y = liveCell.getY() - 1; y <= liveCell.getY() + 1; y++) {
-                    deadCells.add(new Cell(x, y));
-                }
-            }
-        }
+        Set<Cell> deadCells = getAllCells();
 
         return newHashSet(Iterables.filter(deadCells, new Predicate<Cell>() {
             @Override
             public boolean apply(Cell deadCell) {
-                return !liveCells.contains(deadCell);  //To change body of implemented methods use File | Settings | File Templates.
+                return !liveCells.contains(deadCell);
             }
         }));
+    }
+
+    private Set<Cell> getAllCells() {
+        Set<Cell> allCells = newHashSet();
+
+        for(Cell liveCell : liveCells) {
+            for(int x = liveCell.getX() - 1; x <= liveCell.getX() + 1; x++) {
+                for(int y = liveCell.getY() - 1; y <= liveCell.getY() + 1; y++) {
+                    allCells.add(new Cell(x, y));
+                }
+            }
+        }
+        return allCells;
     }
 
     private boolean hasLessThanOrThreeNeighbours(List<Cell> neighbours) {
