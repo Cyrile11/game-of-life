@@ -1,7 +1,6 @@
 package net.diegolemos.gameoflife;
 
 import com.google.common.testing.EqualsTester;
-import net.diegolemos.gameoflife.Cell;
 import org.junit.Test;
 
 /**

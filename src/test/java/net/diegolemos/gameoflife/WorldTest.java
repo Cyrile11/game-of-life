@@ -1,7 +1,5 @@
 package net.diegolemos.gameoflife;
 
-import net.diegolemos.gameoflife.Cell;
-import net.diegolemos.gameoflife.World;
 import org.junit.Test;
 
 import java.util.Set;

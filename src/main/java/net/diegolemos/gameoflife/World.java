@@ -7,9 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.collect.Maps.*;
+import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.*;
-import static com.google.common.collect.Sets.filter;
 
 /**
  * @author: Diego Lemos
