@@ -1,6 +1,7 @@
-package net.diegolemos;
+package net.diegolemos.gameoflife;
 
 import com.google.common.testing.EqualsTester;
+import net.diegolemos.gameoflife.Cell;
 import org.junit.Test;
 
 /**
@@ -10,7 +11,7 @@ import org.junit.Test;
 public class CellTest {
 
     @Test
-    public void testEquality() {
+    public void test_equality() {
         new EqualsTester()
                 .addEqualityGroup(new Cell(1, 1), new Cell(1, 1))
                 .addEqualityGroup(new Cell(2, 2))

@@ -1,4 +1,4 @@
-package net.diegolemos;
+package net.diegolemos.gameoflife;
 
 import com.google.common.base.Objects;
 
@@ -15,6 +15,14 @@ public class Cell {
     public Cell(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     @Override
@@ -35,13 +43,5 @@ public class Cell {
     @Override
     public String toString() {
         return String.format("(%d, %d)", x, y);
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 }
