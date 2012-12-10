@@ -28,13 +28,13 @@ public class GameOfLife {
     private static String takeAPicture(World world) {
         int minX = 0;
         int minY = 0;
-        int maxX = 10;
+        int maxX = 30;
         int maxY = 10;
 
         StringBuilder space = new StringBuilder();
 
-        for(int x = minX; x <= maxX; x++) {
-            for(int y = minY; y <= maxY; y++) {
+        for(int y = maxY; y >= minY; y--) {
+            for(int x = minX; x <= maxX; x++) {
                 if(world.isAlive(new Cell(x, y))) {
                     space.append("X");
                 } else {
