@@ -8,7 +8,7 @@ import static java.lang.Thread.sleep;
  */
 public class GameOfLife {
 
-    private static final Cell[] BLINDER = new Cell[] {new Cell(1,0), new Cell(1,1), new Cell(1,2)};
+    private static final Cell[] BLINKER = new Cell[] {new Cell(1,0), new Cell(1,1), new Cell(1,2)};
     private static final Cell[] GLIDER = new Cell[] {new Cell(3,4), new Cell(4,4), new Cell(5,4), new Cell(5,5), new Cell(4,6)};
 
     public static void main(String... args) throws InterruptedException {
@@ -26,10 +26,10 @@ public class GameOfLife {
     }
 
     private static String takeAPicture(World world) {
-        int minX = 0;
-        int minY = 0;
-        int maxX = 30;
-        int maxY = 10;
+        int minX = -25;
+        int minY = -25;
+        int maxX = 25;
+        int maxY = 25;
 
         StringBuilder space = new StringBuilder();
 
