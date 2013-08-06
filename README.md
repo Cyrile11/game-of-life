@@ -4,7 +4,7 @@ This is a basic Java version of the [Conway's Game of Life](http://en.wikipedia.
 The "game" is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. One interacts with the Game of Life by creating an initial configuration and observing how it evolves.
 
 ## Install
-`mvn clean install`
+- `mvn clean install`
 
 ## Run 
-`mvn exec:java -Dexec.mainClass="net.diegolemos.gameoflife.GameOfLife"`
+- `mvn exec:java -Dexec.mainClass="net.diegolemos.gameoflife.GameOfLife"`
