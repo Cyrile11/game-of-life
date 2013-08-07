@@ -20,12 +20,11 @@ public class World {
     private Map<Cell, Integer> allCellsAndNeighboursCount;
 
     public World(Cell... liveCells) {
+        assert liveCells != null : "The live cells set cannot be null.";
         populateTheWorld(newHashSet(liveCells));
     }
 
     private void populateTheWorld(Set<Cell> liveCells) {
-        assert liveCells != null : "The live cells set cannot be null.";
-
         population = newHashSet(liveCells);
         countNeighboursForAllCells();
     }
