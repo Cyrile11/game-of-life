@@ -12,11 +12,12 @@ public class GameOfLife {
     private static final Cell[] GLIDER = new Cell[] {new Cell(3,4), new Cell(4,4), new Cell(5,4), new Cell(5,5), new Cell(4,6)};
 
     public static void main(String... args) throws InterruptedException {
-        World world = new World(GLIDER);
+        World world = new World(BLINKER, GLIDER);
 
         do {
+            world.nextGeneration();
             printSpace(world);
-        } while(world.nextGeneration());
+        } while(world.hasChanged());
     }
 
     private static void printSpace(World world) throws InterruptedException {
@@ -35,7 +36,7 @@ public class GameOfLife {
 
         for(int y = maxY; y >= minY; y--) {
             for(int x = minX; x <= maxX; x++) {
-                if(world.isAlive(new Cell(x, y))) {
+                if(world.getPopulation().contains(new Cell(x, y))) {
                     space.append("X");
                 } else {
                     space.append(" ");

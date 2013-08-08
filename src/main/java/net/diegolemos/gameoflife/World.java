@@ -3,12 +3,16 @@ package net.diegolemos.gameoflife;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Objects.equal;
+import static com.google.common.base.Predicates.not;
+import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.*;
+import static java.util.Collections.addAll;
 
 /**
  * @author: Diego Lemos
@@ -18,21 +22,35 @@ public class World {
 
     private Set<Cell> population;
     private Map<Cell, Integer> allCellsAndNeighboursCount;
+    private boolean isNewGeneration;
+
+    public World(Cell[]... patterns) {
+        Set<Cell> liveCells = newHashSet();
+
+        for(Cell[] pattern : patterns) {
+            addAll(liveCells, pattern);
+        }
+
+        populateTheWorldWith(liveCells);
+    }
 
     public World(Cell... liveCells) {
-        assert liveCells != null : "The live cells set cannot be null.";
-        populateTheWorld(newHashSet(liveCells));
+        this(newHashSet(liveCells));
     }
 
-    private void populateTheWorld(Set<Cell> liveCells) {
-        population = newHashSet(liveCells);
-        countNeighboursForAllCells();
+    private World(Set<Cell> liveCells) {
+        populateTheWorldWith(liveCells);
     }
 
-    private void countNeighboursForAllCells() {
-        allCellsAndNeighboursCount = newHashMap();
+    private void populateTheWorldWith(Set<Cell> liveCells) {
+        population = liveCells;
+        allCellsAndNeighboursCount = mapNeighbours(population);
+    }
 
-        for(Cell cell : population) {
+    private static Map<Cell, Integer> mapNeighbours(Set<Cell> liveCells) {
+        Map<Cell, Integer> allCellsAndNeighboursCount = newHashMap();
+
+        for(Cell cell : liveCells) {
             Set<Cell> neighbours = getNeighbours(cell);
 
             for(Cell neighbour : neighbours) {
@@ -45,6 +63,8 @@ public class World {
                 }
             }
         }
+
+        return allCellsAndNeighboursCount;
     }
 
     @VisibleForTesting
@@ -53,43 +73,43 @@ public class World {
 
         for(int x = cell.getX() - 1; x <= cell.getX() + 1; x++) {
             for(int y = cell.getY() - 1; y <= cell.getY() + 1; y++) {
-                if(x == cell.getX() && y == cell.getY()) {
-                    continue;
-                }
+                Cell neighbour = new Cell(x, y);
 
-                neighbours.add(new Cell(x, y));
+                if(!cell.equals(neighbour)) {
+                    neighbours.add(neighbour);
+                }
             }
         }
 
         return neighbours;
     }
 
-    public boolean nextGeneration() {
-        Set<Cell> survivors = destroyCellsWithLessThanTwoAndMoreThanThreeNeighbours();
-        Set<Cell> born = createCellsWithThreeNeighbours();
+    public World nextGeneration() {
+        Set<Cell> survivors = from(population)
+                .filter(hasTwoOrThreeNeighbours())
+                .toImmutableSet();
+        Set<Cell> born = from(getDeadCells())
+                .filter(hasThreeNeighbours())
+                .toImmutableSet();
         Set<Cell> newGeneration = union(survivors, born);
 
-        boolean isNewGeneration = !equal(newGeneration, population);
+        isNewGeneration = !equal(newGeneration, population);
 
         if(isNewGeneration) {
-            populateTheWorld(newGeneration);
+            populateTheWorldWith(newGeneration);
         }
 
-        return isNewGeneration;
+        return this;
     }
 
-    @VisibleForTesting
-    Set<Cell> destroyCellsWithLessThanTwoAndMoreThanThreeNeighbours() {
-        return filter(getLiveAndDeadCells(), new Predicate<Cell>() {
+    private Predicate<Cell> hasTwoOrThreeNeighbours() {
+        return new Predicate<Cell>() {
             @Override
             public boolean apply(Cell cell) {
-                return isAlive(cell) && hasTwoOrThreeNeighbours(cell);
+                Integer numberOfNeighbours = countNeighbours(cell);
+                return numberOfNeighbours == 2 || numberOfNeighbours == 3;
             }
-
-            private boolean hasTwoOrThreeNeighbours(Cell cell) {
-                return countNeighbours(cell) == 2 || countNeighbours(cell) == 3;
-            }
-        });
+        };
     }
 
     @VisibleForTesting
@@ -97,26 +117,24 @@ public class World {
         return allCellsAndNeighboursCount.get(cell);
     }
 
-    public boolean isAlive(Cell cell) {
-        return population.contains(cell);
+    private Set<Cell> getDeadCells() {
+        return difference(allCellsAndNeighboursCount.keySet(), population);
     }
 
-    @VisibleForTesting
-    Set<Cell> getLiveAndDeadCells() {
-        return allCellsAndNeighboursCount.keySet();
-    }
-
-    @VisibleForTesting
-    Set<Cell> createCellsWithThreeNeighbours() {
-        return filter(getLiveAndDeadCells(), new Predicate<Cell>() {
+    private Predicate<Cell> hasThreeNeighbours() {
+        return new Predicate<Cell>() {
             @Override
             public boolean apply(Cell cell) {
-                return !isAlive(cell) && countNeighbours(cell) == 3;
+                return countNeighbours(cell) == 3;
             }
-        });
+        };
     }
 
     public Set<Cell> getPopulation() {
         return population;
+    }
+
+    public boolean hasChanged() {
+        return isNewGeneration;
     }
 }
