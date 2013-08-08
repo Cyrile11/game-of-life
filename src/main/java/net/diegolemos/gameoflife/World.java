@@ -3,12 +3,10 @@ package net.diegolemos.gameoflife;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.base.Objects.equal;
-import static com.google.common.base.Predicates.not;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.*;
