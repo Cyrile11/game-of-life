@@ -22,22 +22,25 @@ public class World {
     private Map<Cell, Integer> allCellsAndNeighboursCount;
     private boolean isNewGeneration;
 
-    public World(Cell[]... patterns) {
-        Set<Cell> liveCells = newHashSet();
-
-        for(Cell[] pattern : patterns) {
-            addAll(liveCells, pattern);
-        }
-
-        populateTheWorldWith(liveCells);
-    }
-
     public World(Cell... liveCells) {
         this(newHashSet(liveCells));
     }
 
     private World(Set<Cell> liveCells) {
         populateTheWorldWith(liveCells);
+    }
+
+    public World(Cell[]... patterns) {
+        this(flatten(patterns));
+    }
+
+    private static Set<Cell> flatten(Cell[][] patterns) {
+        Set<Cell> liveCells = newHashSet();
+
+        for(Cell[] pattern : patterns) {
+            addAll(liveCells, pattern);
+        }
+        return liveCells;
     }
 
     private void populateTheWorldWith(Set<Cell> liveCells) {
@@ -83,15 +86,11 @@ public class World {
     }
 
     public World nextGeneration() {
-        Set<Cell> survivors = from(population)
-                .filter(hasTwoOrThreeNeighbours())
-                .toImmutableSet();
-        Set<Cell> born = from(getDeadCells())
-                .filter(hasThreeNeighbours())
-                .toImmutableSet();
+        Set<Cell> survivors = from(population).filter(hasTwoOrThreeNeighbours()).toImmutableSet();
+        Set<Cell> born = from(getDeadCells()).filter(hasThreeNeighbours()).toImmutableSet();
         Set<Cell> newGeneration = union(survivors, born);
 
-        isNewGeneration = !equal(newGeneration, population);
+        isNewGeneration = ! equal(newGeneration, population);
 
         if(isNewGeneration) {
             populateTheWorldWith(newGeneration);

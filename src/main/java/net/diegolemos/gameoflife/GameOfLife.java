@@ -8,11 +8,12 @@ import static java.lang.Thread.sleep;
  */
 public class GameOfLife {
 
+    private static final Cell[] BLOCK = new Cell[] {new Cell(-2,4), new Cell(-2,5), new Cell(-3,4), new Cell(-3, 5)};
     private static final Cell[] BLINKER = new Cell[] {new Cell(1,0), new Cell(1,1), new Cell(1,2)};
     private static final Cell[] GLIDER = new Cell[] {new Cell(3,4), new Cell(4,4), new Cell(5,4), new Cell(5,5), new Cell(4,6)};
 
     public static void main(String... args) throws InterruptedException {
-        World world = new World(BLINKER, GLIDER);
+        World world = new World(BLOCK, BLINKER, GLIDER);
 
         do {
             world.nextGeneration();
